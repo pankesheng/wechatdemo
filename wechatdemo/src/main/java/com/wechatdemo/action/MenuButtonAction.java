@@ -236,6 +236,10 @@ public class MenuButtonAction extends BasicAction {
 			MenuButton b1 = buttons.get(i);
 			if(b1.getBtn_list()!=null && b1.getBtn_list()==1){
 				List<MenuButton> children = menuButtonService.find("btn_order asc", menuButtonService.initQbuilder(new String[]{"btn_state","pid"}, new Object[]{1,b1.getId()}), 5);
+				if(children.size()==0){
+					out.write(ServiceResult.initErrorJson("列表项:"+b1.getBtn_name()+"中必须包含子项！"));
+					return ;
+				}
 				Button[] r2 = new Button[children.size()];
 				for (int j = 0; j < children.size(); j++) {
 					MenuButton b2 = children.get(j);
