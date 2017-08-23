@@ -83,7 +83,10 @@
                 dataIndex: 'btn_key'
             },{
                 title: 'url',
-                dataIndex: 'btn_url'
+                dataIndex: 'btn_url',
+                formatter:{
+                	length:30
+                }
             },{
             	title:'素材',
             	dataIndex:'btn_media_name'
