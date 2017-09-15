@@ -17,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.pks.wechat.material.MaterialNews;
 import com.pks.wechat.material.NewsMaterial;
 import com.pks.wechat.menu.Button;
@@ -29,6 +31,8 @@ import com.pks.wechat.util.WechatApiHelper;
 import com.wechatdemo.common.Configuration;
 import com.wechatdemo.common.ZwPageResult;
 import com.wechatdemo.entity.MenuButton;
+import com.wechatdemo.redis.RedisUtils;
+import com.wechatdemo.redis.RedisUtils2;
 import com.wechatdemo.service.MenuButtonService;
 import com.zcj.util.UtilString;
 import com.zcj.web.dto.ServiceResult;
@@ -40,6 +44,8 @@ public class MenuButtonAction extends BasicAction {
 	
 	@Autowired
 	private MenuButtonService menuButtonService;
+	@Autowired
+	private RedisUtils2 redisUtils;
 	
 	@RequestMapping("/tolist")
 	public String tolist(HttpServletRequest request,Model model){
@@ -106,7 +112,10 @@ public class MenuButtonAction extends BasicAction {
 		if(id==null){
 			return "404.jsp";
 		}
-		MenuButton obj = menuButtonService.findById(id);
+		MenuButton obj = redisUtils.get(id.toString(), MenuButton.class);
+		if(obj==null){
+			obj = menuButtonService.findById(id);
+		}
 		model.addAttribute("obj", obj);
 		Map<String, Object> qbuilder = new HashMap<String, Object>();
 		qbuilder.put("btn_list", 1);
@@ -204,8 +213,10 @@ public class MenuButtonAction extends BasicAction {
 		if(obj.getId()==null){
 			obj.setId(UtilString.getLongUUID());
 			menuButtonService.insert(obj);
+			redisUtils.put(obj.getId().toString(), obj);
 		}else{
 			menuButtonService.update(obj);
+			redisUtils.put(obj.getId().toString(), obj);
 		}
 		out.write(ServiceResult.initSuccessJson(null));
 	}
