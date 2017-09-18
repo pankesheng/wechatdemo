@@ -1,8 +1,13 @@
 package com.wechatdemo.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.zcj.web.mybatis.entity.BasicEntity;
+
+import sun.net.www.content.audio.basic;
 
 /**
  * 微信自定义菜单按钮
@@ -10,7 +15,11 @@ import java.util.Map;
  * @author pks
  *
  */
-public class MenuButton {
+public class MenuButton implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7392849827732779019L;
 	public static final String KEY_ZXKF = "zxkf";	//在线客服
 	public static final String TYPE_CLICK = "click";//点击事件按钮
 	public static final String TYPE_VIEW = "view";	//视图按钮

@@ -1,6 +1,9 @@
 package com.wechatdemo.redis;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -24,4 +27,13 @@ public class RedisUtils3 {
 		return (MenuButton) redisTemplate.opsForHash().get(objectKey, key);
 	}
 	
+	public void set(String key,Object obj){
+		ListOperations<String, Object> list = redisTemplate.opsForList();
+		list.rightPush("list_menubutton", obj);
+		redisTemplate.opsForValue().set(key, obj);
+	}
+	
+	public MenuButton get(String key){
+		return (MenuButton) redisTemplate.opsForValue().get(key);
+	}
 }

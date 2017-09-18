@@ -46,7 +46,7 @@ public class MenuButtonAction extends BasicAction {
 	@Autowired
 	private MenuButtonService menuButtonService;
 	@Autowired
-	private RedisUtils3 redisUtils;
+	private RedisUtils3 redisUtils3;
 	
 	@RequestMapping("/tolist")
 	public String tolist(HttpServletRequest request,Model model){
@@ -114,7 +114,7 @@ public class MenuButtonAction extends BasicAction {
 		if(id==null){
 			return "404.jsp";
 		}
-		MenuButton obj = redisUtils.get("menuButton", id.toString());
+		MenuButton obj = redisUtils3.get(id.toString());
 		if(obj==null){
 			obj = menuButtonService.findById(id);
 		}
@@ -218,7 +218,7 @@ public class MenuButtonAction extends BasicAction {
 		}else{
 			menuButtonService.update(obj);
 		}
-		redisUtils.set("menuButton", obj.getId().toString(),obj);
+		redisUtils3.set(obj.getId().toString(),obj);
 		out.write(ServiceResult.initSuccessJson(null));
 	}
 	

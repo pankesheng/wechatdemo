@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 @Component("redisUtils")
 public class RedisUtils {
 
+	@Autowired
 	private StringRedisTemplate stringRedisTemplate;
 
-	@Autowired
-	public void setRedisTemplate(StringRedisTemplate stringRedisTemplate) {
-		this.stringRedisTemplate = stringRedisTemplate;
-	}
+//	public void setRedisTemplate(StringRedisTemplate stringRedisTemplate) {
+//		this.stringRedisTemplate = stringRedisTemplate;
+//	}
 
 	public <T> void put(String key, T obj) {
 		stringRedisTemplate.opsForValue().set(key, JsonUtils.toJson(obj));
