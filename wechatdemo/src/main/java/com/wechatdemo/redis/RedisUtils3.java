@@ -28,8 +28,7 @@ public class RedisUtils3 {
 	}
 	
 	public void set(String key,Object obj){
-		ListOperations<String, Object> list = redisTemplate.opsForList();
-		list.rightPush("list_menubutton", obj);
+		redisTemplate.opsForList().rightPush("list_menubutton", obj);
 		redisTemplate.opsForValue().set(key, obj);
 	}
 	
