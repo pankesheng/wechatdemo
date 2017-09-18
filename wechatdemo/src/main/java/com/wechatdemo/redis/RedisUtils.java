@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 @Component("redisUtils")
 public class RedisUtils {
 
-	private StringRedisTemplate redisTemplate;
+	private StringRedisTemplate stringRedisTemplate;
 
 	@Autowired
-	public void setRedisTemplate(StringRedisTemplate redisTemplate) {
-		this.redisTemplate = redisTemplate;
+	public void setRedisTemplate(StringRedisTemplate stringRedisTemplate) {
+		this.stringRedisTemplate = stringRedisTemplate;
 	}
 
 	public <T> void put(String key, T obj) {
-		redisTemplate.opsForValue().set(key, JsonUtils.toJson(obj));
+		stringRedisTemplate.opsForValue().set(key, JsonUtils.toJson(obj));
 	}
 
 	public <T> void put(String key, T obj, int timeout) {
@@ -26,29 +26,29 @@ public class RedisUtils {
 	}
 
 	public <T> void put(String key, T obj, int timeout, TimeUnit unit) {
-		redisTemplate.opsForValue().set(key, JsonUtils.toJson(obj), timeout, unit);
+		stringRedisTemplate.opsForValue().set(key, JsonUtils.toJson(obj), timeout, unit);
 	}
 	
 	public <T> T get(String key, Class<T> cls) {
-		return JsonUtils.fromJson(redisTemplate.opsForValue().get(key), cls);
+		return JsonUtils.fromJson(stringRedisTemplate.opsForValue().get(key), cls);
 	}
 	
 	public <E, T extends Collection<E>> T get(String key, Class<E> cls, Class<T> collectionClass) {
-		return JsonUtils.fromJson(redisTemplate.opsForValue().get(key), cls, collectionClass);
+		return JsonUtils.fromJson(stringRedisTemplate.opsForValue().get(key), cls, collectionClass);
 	}
 
 
 
 	public boolean exists(String key) {
-		return redisTemplate.hasKey(key);
+		return stringRedisTemplate.hasKey(key);
 	}
 
 	public void delete(String key) {
-		redisTemplate.delete(key);
+		stringRedisTemplate.delete(key);
 	}
 
 	public boolean expire(String key, long timeout, TimeUnit timeUnit) {
-		return redisTemplate.expire(key, timeout, timeUnit);
+		return stringRedisTemplate.expire(key, timeout, timeUnit);
 	}
 	
 	public boolean expire(String key, long timeout) {
@@ -56,7 +56,7 @@ public class RedisUtils {
 	}
 	
 	public void put(String key, String value) {
-		redisTemplate.opsForValue().set(key, value);
+		stringRedisTemplate.opsForValue().set(key, value);
 	}
 
 	public void put(String key, String value, int timeout) {
@@ -64,12 +64,12 @@ public class RedisUtils {
 	}
 
 	public void put(String key, String value, int timeout, TimeUnit unit) {
-		redisTemplate.opsForValue().set(key, value, timeout, unit);
+		stringRedisTemplate.opsForValue().set(key, value, timeout, unit);
 	}
 
 	
 	public String get(String key) {
-		return redisTemplate.opsForValue().get(key);
+		return stringRedisTemplate.opsForValue().get(key);
 	}
 	
 }

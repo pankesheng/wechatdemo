@@ -33,6 +33,7 @@ import com.wechatdemo.common.ZwPageResult;
 import com.wechatdemo.entity.MenuButton;
 import com.wechatdemo.redis.RedisUtils;
 import com.wechatdemo.redis.RedisUtils2;
+import com.wechatdemo.redis.RedisUtils3;
 import com.wechatdemo.service.MenuButtonService;
 import com.zcj.util.UtilString;
 import com.zcj.web.dto.ServiceResult;
@@ -45,7 +46,7 @@ public class MenuButtonAction extends BasicAction {
 	@Autowired
 	private MenuButtonService menuButtonService;
 	@Autowired
-	private RedisUtils2 redisUtils;
+	private RedisUtils3 redisUtils;
 	
 	@RequestMapping("/tolist")
 	public String tolist(HttpServletRequest request,Model model){
@@ -68,6 +69,7 @@ public class MenuButtonAction extends BasicAction {
 		if(pid!=null){
 			qbuilder.put("pid", pid);
 		}
+		
 		List<MenuButton> list = menuButtonService.findByPage("btn_order asc", qbuilder);
 		for (MenuButton obj : list) {
 			if(obj.getPid()!=null){
@@ -112,7 +114,7 @@ public class MenuButtonAction extends BasicAction {
 		if(id==null){
 			return "404.jsp";
 		}
-		MenuButton obj = redisUtils.get(id.toString(), MenuButton.class);
+		MenuButton obj = redisUtils.get("menuButton", id.toString());
 		if(obj==null){
 			obj = menuButtonService.findById(id);
 		}
@@ -213,11 +215,10 @@ public class MenuButtonAction extends BasicAction {
 		if(obj.getId()==null){
 			obj.setId(UtilString.getLongUUID());
 			menuButtonService.insert(obj);
-			redisUtils.put(obj.getId().toString(), obj);
 		}else{
 			menuButtonService.update(obj);
-			redisUtils.put(obj.getId().toString(), obj);
 		}
+		redisUtils.set("menuButton", obj.getId().toString(),obj);
 		out.write(ServiceResult.initSuccessJson(null));
 	}
 	
