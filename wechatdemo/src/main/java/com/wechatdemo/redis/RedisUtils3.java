@@ -33,5 +33,6 @@ public class RedisUtils3 {
 	public MenuButton get(String key){
 		return (MenuButton) redisTemplate.opsForValue().get(key);
 	}
+	
 
 }
