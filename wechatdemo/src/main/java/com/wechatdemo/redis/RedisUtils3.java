@@ -1,9 +1,7 @@
 package com.wechatdemo.redis;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -35,4 +33,5 @@ public class RedisUtils3 {
 	public MenuButton get(String key){
 		return (MenuButton) redisTemplate.opsForValue().get(key);
 	}
+
 }

@@ -79,6 +79,6 @@
 		<property name="wechat_pay_action" value="${wechat.pay_action}" />
 	</bean>	
 	
-	<import resource="classpath:conf/Spring-redis.xml" />
+	<import resource="classpath:conf/spring-redis.xml" />
 	
 </beans>
