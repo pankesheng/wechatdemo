@@ -66,7 +66,7 @@
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation" />
 	</aop:config>
 	
-	<bean id="configuration" class="com.wechatdemo.common.Configuration">
+	<!-- <bean id="configuration" class="com.wechatdemo.common.Configuration">
 		<property name="contextPath" value="${configuration.contextPath}"/>
 		<property name="wechat_token" value="${wechat.token}" />
 		<property name="wechat_appId" value="${wechat.appId}" />
@@ -77,6 +77,13 @@
 		<property name="wechat_domain_url" value="${wechat.domain_url}" />
 		<property name="wechat_notify_url" value="${wechat.notify_url}" />
 		<property name="wechat_pay_action" value="${wechat.pay_action}" />
+	</bean>	 -->
+	
+	<bean id="configuration" class="com.wechatdemo.common.Configuration">
+		<property name="contextPath" value="${configuration.contextPath}"/>
+		<property name="wechat_appId" value="${wechat.appId}" />
+		<property name="wechat_appSecret" value="${wechat.appSecret}" />
+		<property name="wechat_domain_url" value="${wechat.domain_url}" />
 	</bean>	
 	
 	<import resource="classpath:conf/spring-redis.xml" />

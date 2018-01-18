@@ -24,6 +24,7 @@ public class MenuButton implements Serializable {
 	public static final String TYPE_CLICK = "click";//点击事件按钮
 	public static final String TYPE_VIEW = "view";	//视图按钮
 	public static final String TYPE_MATERIAL = "material";	//素材
+	public static final String TYPE_QRCODE = "scancode_push";//扫码
 	public static final Map<String, String> KEY_MAP = new HashMap<String, String>();
 	public static final Map<String, String> TYPE_MAP = new HashMap<String, String>();
 	static{
@@ -32,6 +33,7 @@ public class MenuButton implements Serializable {
 		TYPE_MAP.put(TYPE_CLICK,TYPE_CLICK);	
 		TYPE_MAP.put(TYPE_VIEW,TYPE_VIEW);
 		TYPE_MAP.put(TYPE_MATERIAL, TYPE_MATERIAL);
+		TYPE_MAP.put(TYPE_QRCODE, TYPE_QRCODE);
 	}
 	
 	private Long id ;

@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,7 @@ import com.pks.wechat.util.SUtilQrcode;
 import com.pks.wechat.util.SUtilTempMsg;
 import com.pks.wechat.util.SUtilUser;
 import com.wechatdemo.common.Configuration;
+import com.wechatdemo.listener.SessionListener;
 import com.zcj.util.UtilString;
 import com.zcj.web.dto.ServiceResult;
 
@@ -59,23 +61,25 @@ public class WeChatPayController {
 	}
 	
 	@RequestMapping(value="/oauth")
-	public void oauth(HttpServletRequest request,HttpServletResponse response) throws IOException{
+	public void oauth(HttpServletRequest request,HttpServletResponse response,String sessionid) throws IOException{
+		System.out.println(sessionid);
 		String redirect_uri = Configuration.wechat_domain_url+"/wxpay/oauth2.ajax";//  : -> %3A      / -> %2F
-		String param = request.getParameter("param");
-		param = param==null?"":param;
-    	String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+Configuration.wechat_appId+"&redirect_uri="+redirect_uri.replaceAll(":", "%3A").replaceAll("/", "%2F")+"&response_type=code&scope=snsapi_userinfo&state="+param+"#wechat_redirect";
+    	String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+Configuration.wechat_appId+"&redirect_uri="+redirect_uri.replaceAll(":", "%3A").replaceAll("/", "%2F")+"&response_type=code&scope=snsapi_base&state="+sessionid+"#wechat_redirect";
 		response.sendRedirect(url); 
 	}
 	
-	@RequestMapping(value = "/oauth2/{appId}")
-	public String oauth2(Model model,@PathVariable String appId, HttpServletRequest request,
+	@RequestMapping(value = "/oauth2")
+	public String oauth2(Model model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		System.out.println(appId);
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");// [/align][align=left] //
 												// 用户同意授权后，能获取到code
 		String code = request.getParameter("code");// [/align][align=left] //
 		String state = request.getParameter("state");
+		HttpSession session = SessionListener.getSession(state);
+		if(session!=null){
+//			session.setAttribute("userinfo", true);
+		}
 		// 用户同意授权
 		if (!"authdeny".equals(code)) {
 			// 获取网页授权access_token
@@ -127,7 +131,7 @@ public class WeChatPayController {
 		// scope 参数视各自需求而定，这里用scope=snsapi_base 不弹出授权页面直接授权目的只获取统一支付接口的openid
 		String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appid
 				+ "&redirect_uri=" + backUri
-				+ "&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect";
+				+ "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
 		response.sendRedirect(url);
 	}
 
@@ -151,4 +155,5 @@ public class WeChatPayController {
 //			}
 //		}
 	}
+	
 }

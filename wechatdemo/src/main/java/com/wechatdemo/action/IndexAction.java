@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.pks.wechat.util.SUtilCommon;
 import com.wechatdemo.common.Configuration;
 import com.wechatdemo.common.MenuDto;
 import com.zcj.web.dto.ServiceResult;
@@ -53,13 +54,22 @@ public class IndexAction extends BasicAction {
 	@RequestMapping("/menu")
 	public void menu(HttpServletRequest request, PrintWriter out) {
 
-		MenuDto m11 = new MenuDto("通讯录", Configuration.getContextPath() + "/menubutton/tolist.do");
-		MenuDto m1 = MenuDto.initPMenuDto("菜单", m11);
+		MenuDto m10 = new MenuDto("素材管理", Configuration.getContextPath() + "/menubutton/tomateriallist.do?type=news");
+		MenuDto m11 = new MenuDto("自定义菜单", Configuration.getContextPath() + "/menubutton/tolist.do");
+		MenuDto m12 = new MenuDto("微信扫码登录", Configuration.getContextPath() + "/qrcode/toqrcode.do");
+		MenuDto m1 = MenuDto.initPMenuDto("菜单",m10,m11,m12);
+		m1.setOpen(true);
 		List<MenuDto> menu = new ArrayList<MenuDto>();
 		menu.add(m1);
 
 		String result = ServiceResult.initSuccessJson(menu);
 		out.write(result);
+	}
+	
+	@RequestMapping("/login")
+	public void login(HttpServletRequest request, PrintWriter out){
+		request.getSession().setAttribute("login_info", "测试测试"+SUtilCommon.buildRandom(3));
+		out.write(ServiceResult.initSuccessJson(null));
 	}
 
 }

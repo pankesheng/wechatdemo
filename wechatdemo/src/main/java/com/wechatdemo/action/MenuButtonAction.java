@@ -26,7 +26,9 @@ import com.pks.wechat.menu.ClickButton;
 import com.pks.wechat.menu.ComplexButton;
 import com.pks.wechat.menu.MaterialButton;
 import com.pks.wechat.menu.Menu;
+import com.pks.wechat.menu.QrcodeButton;
 import com.pks.wechat.menu.ViewButton;
+import com.pks.wechat.util.SUtilBase;
 import com.pks.wechat.util.WechatApiHelper;
 import com.wechatdemo.common.Configuration;
 import com.wechatdemo.common.ZwPageResult;
@@ -59,6 +61,8 @@ public class MenuButtonAction extends BasicAction {
 	
 	@RequestMapping("/list")
 	public void list(HttpServletRequest request,String btn_name,Integer btn_state,Long pid,PrintWriter out){
+		String serverips = SUtilBase.getServerIps(Configuration.wechat_appId);
+		System.out.println(serverips);
 		Map<String, Object> qbuilder = new HashMap<String, Object>();
 		if(StringUtils.isNotBlank(btn_name)){
 			qbuilder.put("btn_name", "%"+btn_name.trim()+"%");
@@ -205,6 +209,8 @@ public class MenuButtonAction extends BasicAction {
 						out.write(ServiceResult.initErrorJson("请选择素材！"));
 						return ;
 					}
+				}else if(MenuButton.TYPE_QRCODE.equals(obj.getBtn_type())){
+					
 				}
 			}else{
 				obj.setBtn_type(null);
@@ -263,7 +269,10 @@ public class MenuButtonAction extends BasicAction {
 						r2[j] = vb;
 					}else if(MenuButton.TYPE_MATERIAL.equals(b2.getBtn_type())){
 						MaterialButton mb = new MaterialButton(b2.getBtn_name(), b2.getBtn_media_id());
-						r2[i] = mb;
+						r2[j] = mb;
+					}else if(MenuButton.TYPE_QRCODE.equals(b2.getBtn_type())){
+						QrcodeButton qb = new QrcodeButton(b2.getBtn_name(), b2.getBtn_type(), b2.getBtn_key(), new Button[]{});
+						r2[j] = qb; 
 					}
 				}
 				ComplexButton cb = new ComplexButton(b1.getBtn_name(), r2);
@@ -278,6 +287,9 @@ public class MenuButtonAction extends BasicAction {
 				}else if(MenuButton.TYPE_MATERIAL.equals(b1.getBtn_type())){
 					MaterialButton mb = new MaterialButton(b1.getBtn_name(), b1.getBtn_media_id());
 					r1[i] = mb;
+				}else if(MenuButton.TYPE_QRCODE.equals(b1.getBtn_type())){
+					QrcodeButton qb = new QrcodeButton(b1.getBtn_name(), b1.getBtn_type(), b1.getBtn_key(), new Button[]{});
+					r1[i] = qb; 
 				}
 			}
 		}
