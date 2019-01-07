@@ -1,5 +1,6 @@
 package com.wechatdemo.action;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.pks.wechat.material.ArticleMaterial;
 import com.pks.wechat.material.MaterialNews;
 import com.pks.wechat.material.NewsMaterial;
 import com.pks.wechat.menu.Button;
@@ -28,7 +30,12 @@ import com.pks.wechat.menu.MaterialButton;
 import com.pks.wechat.menu.Menu;
 import com.pks.wechat.menu.QrcodeButton;
 import com.pks.wechat.menu.ViewButton;
+import com.pks.wechat.message.resp.Article;
+import com.pks.wechat.pojo.WeChatMedia;
+import com.pks.wechat.util.Page;
 import com.pks.wechat.util.SUtilBase;
+import com.pks.wechat.util.SUtilMaterial;
+import com.pks.wechat.util.SUtilSend;
 import com.pks.wechat.util.WechatApiHelper;
 import com.wechatdemo.common.Configuration;
 import com.wechatdemo.common.ZwPageResult;
@@ -305,7 +312,34 @@ public class MenuButtonAction extends BasicAction {
 	
 	@RequestMapping("/tomateriallist")
 	public String tomateriallist(HttpServletRequest request,String type,Model model){
+		
+		String url = "http://pks.easy.echosite.cn/wechatdemo/upload/11223344.png";
+		File file = new File(request.getSession().getServletContext().getRealPath("")+"/upload/11223344.png");
+		try {
+//			WeChatMedia media = SUtilMaterial.uploadTempMaterail(Configuration.wechat_appId, "image", file);
+//			String media_id = media.getMediaId();
+			String media_id = "x3tByUSjFPI7S5AdVzIVsx1P7PlnAG3QqM4pmz4A5MOrbK7-uUnXw_bxmJs-FpKI";
+			List<ArticleMaterial> list = new ArrayList<ArticleMaterial>();
+			list.add(new ArticleMaterial(media_id, "1", "1", "http://www.baidu.com", "1", "", null, null, null));
+			WeChatMedia m = SUtilSend.uploadnews(Configuration.wechat_appId, list);
+//			System.out.println(m.getMediaId());
+			media_id = m.getMediaId();
+//			media_id = "VkfeBPT51YoW82M1hxBbpMWqHzM-kT4BNZGB5mx2K4JxB_SX-OSwcqcO6j0nTUmO"; //uploadnew 后的media_id
+			SUtilSend.sendPreviewMessage(Configuration.wechat_appId, SUtilSend.makeArticlePreviewMessage("oXWySjiKx0vEVHmMs-Ul9u8O4_vA",null, media_id));
+//			List<String> openIds = new ArrayList<String>();
+//			openIds.add("oXWySjiKx0vEVHmMs-Ul9u8O4_vA");
+//			openIds.add("oXWySjszg5jxhM8pbSKrz5yriUJk");
+//			SUtilSend.sendUserMessage(Configuration.wechat_appId, SUtilSend.makeImageUserMeesage(openIds, media_id));
+//			SUtilSend.sendUserMessage(Configuration.wechat_appId, SUtilSend.makeArticleUserMessage(openIds, media_id, 0));
+//			SUtilSend.sendTagMessage(Configuration.wechat_appId, SUtilSend.makeImageTagMessage(true, null, media_id));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		WeChatMedia media = SUtilMaterial.uploadTempMaterail(Configuration.wechat_appId, "thumb", file);
+//		System.out.println(media.getMediaId());
 		model.addAttribute("type", type);
+//		SUtilMaterial.upload(Configuration.wechat_appId, file, "thumb");
 		String returnUrl = "404.jsp";
 		if("news".equals(type)){
 			returnUrl = "/WEB-INF/ftl/admin/weixin/material_news_list.ftl";
@@ -316,7 +350,7 @@ public class MenuButtonAction extends BasicAction {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/materiallist")
 	public void getMaterialList(PrintWriter out,String type) throws ParseException{
-		page = WechatApiHelper.getMaterialList(Configuration.wechat_appId,type,0,20);
+		Page page = WechatApiHelper.getMaterialList(Configuration.wechat_appId,type,0,20);
 		if(page.getRows()!=null){
 			if(StringUtils.isNotBlank(type) && "news".equals(type)){
 				List<NewsMaterial> list = (List<NewsMaterial>) page.getRows();
@@ -332,6 +366,9 @@ public class MenuButtonAction extends BasicAction {
 				page.setRows(list);
 			}
 		}
-		out.write(ZwPageResult.converByServiceResult(ServiceResult.initSuccess(page)));
+		com.zcj.web.dto.Page page1 = new com.zcj.web.dto.Page();
+		page1.setRows(page.getRows());
+		page1.setTotal(page.getTotal());
+		out.write(ZwPageResult.converByServiceResult(ServiceResult.initSuccess(page1)));
 	}
 }
